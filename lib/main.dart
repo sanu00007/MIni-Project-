@@ -171,7 +171,7 @@ class _LoginState extends State<Login> {
                     GestureDetector(
                       onTap: navigateTosignup,
                       child: const Text(
-                        "Sign In",
+                        "Sign Up",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     )
