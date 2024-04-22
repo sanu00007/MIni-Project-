@@ -1,7 +1,7 @@
 import 'package:farefinale/home.dart';
 import 'package:farefinale/main.dart';
 import 'package:farefinale/onboard.dart';
-import 'package:farefinale/owner.dart';
+import 'package:farefinale/shop_registration.dart';
 import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/utils/dimension.dart';
 import 'package:farefinale/utils/utils.dart';
@@ -54,7 +54,7 @@ class _SignupState extends State<Signup> {
 
   void navigateToOwner() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Owner()));
+        context, MaterialPageRoute(builder: (context) => Shopreg()));
   }
 
   @override
@@ -157,4 +157,5 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
+  
 }
