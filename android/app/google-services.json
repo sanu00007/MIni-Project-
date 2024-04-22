@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "969641690633",
+    "project_id": "farefinale-4ec3b",
+    "storage_bucket": "farefinale-4ec3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969641690633:android:67056784efb3b095d1dad8",
+        "android_client_info": {
+          "package_name": "com.example.farefinale"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTkhm30Y4yZSTS92eKlopfqEDDgXwZkgE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
