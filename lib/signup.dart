@@ -116,7 +116,7 @@ class _SignupState extends State<Signup> {
                             ),
                           )
                         : const Text(
-                            'Sign In',
+                            'Sign Up',
                             style: TextStyle(color: Colors.white),
                           ),
                   ),
