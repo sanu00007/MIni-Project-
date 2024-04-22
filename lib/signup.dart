@@ -1,6 +1,7 @@
 import 'package:farefinale/home.dart';
 import 'package:farefinale/main.dart';
 import 'package:farefinale/onboard.dart';
+import 'package:farefinale/owner.dart';
 import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/utils/dimension.dart';
 import 'package:farefinale/utils/utils.dart';
@@ -49,6 +50,11 @@ class _SignupState extends State<Signup> {
   void navigateToLogin() {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
+  void navigateToOwner() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Owner()));
   }
 
   @override
@@ -132,6 +138,18 @@ class _SignupState extends State<Signup> {
                   ],
                 ),
                 const SizedBox(height: 16), // Adjusted spacing
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: navigateToOwner,
+                      child: const Text(
+                        "Are you a Shop Owner?",
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),

@@ -10,7 +10,7 @@ import 'splashscreen.dart';
 import 'utils/dimension.dart';
 import 'widgets/textfield.dart';
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
