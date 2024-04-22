@@ -1,8 +1,6 @@
-import 'package:farefinale/home.dart';
-import 'package:farefinale/profile.dart';
-import 'package:farefinale/widgets/searchresults.dart';
-import 'package:farefinale/shop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class MyMap extends StatelessWidget {
   const MyMap({super.key});
@@ -11,7 +9,6 @@ class MyMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -23,53 +20,63 @@ class MyMap extends StatelessWidget {
           ),
         ),
       ),
-      body: Image.asset('assets/images/vector.jpg',
-          fit: BoxFit.cover, width: double.infinity, height: double.infinity),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color.fromARGB(255, 252, 252, 252),
-        shape: CircularNotchedRectangle(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.home),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyApp()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchResults()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.shopping_cart),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FoodItemPage()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.person),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      body: content(),
     );
   }
 }
+
+Widget content() {
+  return FlutterMap(
+    options: MapOptions(
+      initialCenter: LatLng(8.8932, 76.6141),
+      initialZoom: 15,
+      interactionOptions:
+          const InteractionOptions(flags: ~InteractiveFlag.doubleTapDragZoom),
+    ),
+    children: [
+      openStreetMapTileLayer,
+      const MarkerLayer(
+        markers: [
+          Marker(
+            point: LatLng(8.8932, 76.6150),
+            width: 60,
+            height: 60,
+            alignment: Alignment.centerLeft,
+            child: Icon(
+              Icons.location_pin,
+              size: 60,
+              color: Colors.red,
+            ),
+          ),
+          Marker(
+            point: LatLng(8.8932, 76.6141),
+            width: 60,
+            height: 60,
+            alignment: Alignment.centerLeft,
+            child: Icon(
+              Icons.location_pin,
+              size: 60,
+              color: Colors.red,
+            ),
+          ),
+          Marker(
+            point: LatLng(8.8932, 76.6162),
+            width: 60,
+            height: 60,
+            alignment: Alignment.centerLeft,
+            child: Icon(
+              Icons.location_pin,
+              size: 60,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+TileLayer get openStreetMapTileLayer => TileLayer(
+      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+    );
