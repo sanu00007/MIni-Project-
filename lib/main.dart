@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'splashscreen.dart';
 import 'utils/dimension.dart';
 import 'widgets/textfield.dart';
+import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,9 @@ Future main() async {
       ),
     );
   } else {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 
   runApp(MaterialApp(
