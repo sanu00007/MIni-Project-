@@ -1,5 +1,6 @@
 import 'package:farefinale/home.dart';
 import 'package:farefinale/resources/auth_methods.dart';
+import 'package:farefinale/shopdetails.dart';
 import 'package:farefinale/signup.dart';
 import 'package:farefinale/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await fetchShopDetailsFromFirestore();
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(

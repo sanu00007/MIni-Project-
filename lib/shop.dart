@@ -220,46 +220,20 @@ class ShopDesign extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(ShopDetails);
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyMap()));
-      },
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(3),
-            height: 150,
-            width: 160,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white,
-                  blurRadius: 5,
-                  spreadRadius: 5,
-                  offset: Offset(0.0, 3.0),
-                ),
-              ],
-              border: Border.all(
-                color: Colors.white,
-                width: 3,
-              ),
-              image: DecorationImage(
-                image: AssetImage(design.image),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 4,
             ),
             child: Center(
               child: Text(
-                design.title,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                design.name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
           ),
@@ -270,7 +244,7 @@ class ShopDesign extends StatelessWidget {
             child: Center(
               child: Text(
                 design.location,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
           )
