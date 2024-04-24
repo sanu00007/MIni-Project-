@@ -151,24 +151,74 @@ class _FoodItemPageState extends State<FoodItemPage> {
               ],
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(),
-              child: GridView.builder(
-                itemCount: ShopDetails.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, childAspectRatio: 0.65),
-                itemBuilder: (context, index) => ShopDesign(
-                  design: ShopDetails[index],
-                  onTap: () {
-                    // Define the action to be performed when the image is tapped
-                    print('Image tapped! Index: $index');
-                    // You can navigate to another page here if needed
-                  },
+
+          SizedBox(height: 10), // Adjust the spacing as needed
+        Expanded(
+          child: FutureBuilder<QuerySnapshot>(
+            future: FirebaseFirestore.instance.collection('Shop').get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator(); // Display a loading indicator while fetching data
+              }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}'); // Display an error message if data fetching fails
+              }
+
+              // If data fetching is successful, display the list of shops
+              return GridView.builder(
+                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Set the number of columns in the grid
+                  crossAxisSpacing: 10, // Set the spacing between columns
+                  mainAxisSpacing: 10, // Set the spacing between rows
                 ),
-              ),
-            ),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  // Extract data from the document snapshot
+                  var doc = snapshot.data!.docs[index];
+                  var id = doc.id;
+                  var name = doc['name'];
+                  var location = doc['loc'];
+                  var contact = doc['contact'];
+
+                  // Return a ListTile widget for each shop
+                  return Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(height: 4),
+                          Text('$location'),
+                          Text('$contact'),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
+        ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(),
+          //     child: GridView.builder(
+          //       itemCount: ShopDetails.length,
+          //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //           crossAxisCount: 3, childAspectRatio: 0.65),
+          //       itemBuilder: (context, index) => ShopDesign(
+          //         design: ShopDetails[index],
+          //         onTap: () {
+          //           // Define the action to be performed when the image is tapped
+          //           print('Image tapped! Index: $index');
+          //           // You can navigate to another page here if needed
+          //         },
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -205,41 +255,6 @@ class _FoodItemPageState extends State<FoodItemPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ShopDesign extends StatelessWidget {
-  final ShopDetail design;
-  final VoidCallback onTap;
-
-  ShopDesign({
-    Key? key,
-    required this.design,
-    required this.onTap,
-  }) : super(key: key);
-
-  final CollectionReference shops =
-      FirebaseFirestore.instance.collection('Shop');
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: StreamBuilder(
-          stream: shops.snapshots(),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot shopSnap = snapshot.data.docs[index];
-                  print(shopSnap['name']);
-                },
-              );
-            }
-            return Container();
-          }),
     );
   }
 }
