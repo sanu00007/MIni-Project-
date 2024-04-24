@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farefinale/widgets/location.dart';
 import 'package:flutter/material.dart';
 import 'package:farefinale/home.dart';
@@ -150,24 +151,77 @@ class _FoodItemPageState extends State<FoodItemPage> {
               ],
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(),
-              child: GridView.builder(
-                itemCount: ShopDetails.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, childAspectRatio: 0.65),
-                itemBuilder: (context, index) => ShopDesign(
-                  design: ShopDetails[index],
-                  onTap: () {
-                    // Define the action to be performed when the image is tapped
-                    print('Image tapped! Index: $index');
-                    // You can navigate to another page here if needed
-                  },
+
+          SizedBox(height: 10), // Adjust the spacing as needed
+        Expanded(
+          child: FutureBuilder<QuerySnapshot>(
+            future: FirebaseFirestore.instance.collection('Shop').get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), 
+                  strokeWidth: 2,
+                ); 
+              }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}'); 
+              }
+
+              // If data fetching is successful, display the list of shops
+              return GridView.builder(
+                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Set the number of columns in the grid
+                  crossAxisSpacing: 10, // Set the spacing between columns
+                  mainAxisSpacing: 10, // Set the spacing between rows
                 ),
-              ),
-            ),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  // Extract data from the document snapshot
+                  var doc = snapshot.data!.docs[index];
+                  var id = doc.id;
+                  var name = doc['name'];
+                  var location = doc['loc'];
+                  var contact = doc['contact'];
+
+                  // Return a ListTile widget for each shop
+                  return Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(height: 4),
+                          Text('$location'),
+                          Text('$contact'),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
+        ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(),
+          //     child: GridView.builder(
+          //       itemCount: ShopDetails.length,
+          //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //           crossAxisCount: 3, childAspectRatio: 0.65),
+          //       itemBuilder: (context, index) => ShopDesign(
+          //         design: ShopDetails[index],
+          //         onTap: () {
+          //           // Define the action to be performed when the image is tapped
+          //           print('Image tapped! Index: $index');
+          //           // You can navigate to another page here if needed
+          //         },
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -203,78 +257,6 @@ class _FoodItemPageState extends State<FoodItemPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ShopDesign extends StatelessWidget {
-  final ShopDetail design;
-  final VoidCallback onTap;
-
-  const ShopDesign({
-    Key? key,
-    required this.design,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyMap()));
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(3),
-            height: 150,
-            width: 160,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white,
-                  blurRadius: 5,
-                  spreadRadius: 5,
-                  offset: Offset(0.0, 3.0),
-                ),
-              ],
-              border: Border.all(
-                color: Colors.white,
-                width: 3,
-              ),
-              image: DecorationImage(
-                image: AssetImage(design.image),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 4,
-            ),
-            child: Center(
-              child: Text(
-                design.title,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 1,
-            ),
-            child: Center(
-              child: Text(
-                design.location,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          )
-        ],
       ),
     );
   }
