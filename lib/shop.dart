@@ -153,57 +153,59 @@ class _FoodItemPageState extends State<FoodItemPage> {
           ),
 
           SizedBox(height: 10), // Adjust the spacing as needed
-        Expanded(
-          child: FutureBuilder<QuerySnapshot>(
-            future: FirebaseFirestore.instance.collection('Shop').get(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), 
-                  strokeWidth: 2,
-                ); 
-              }
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}'); 
-              }
-
-              // If data fetching is successful, display the list of shops
-              return GridView.builder(
-                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // Set the number of columns in the grid
-                  crossAxisSpacing: 10, // Set the spacing between columns
-                  mainAxisSpacing: 10, // Set the spacing between rows
-                ),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  // Extract data from the document snapshot
-                  var doc = snapshot.data!.docs[index];
-                  var id = doc.id;
-                  var name = doc['name'];
-                  var location = doc['loc'];
-                  var contact = doc['contact'];
-
-                  // Return a ListTile widget for each shop
-                  return Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 4),
-                          Text('$location'),
-                          Text('$contact'),
-                        ],
-                      ),
-                    ),
+          Expanded(
+            child: FutureBuilder<QuerySnapshot>(
+              future: FirebaseFirestore.instance.collection('Shop').get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    strokeWidth: 2,
                   );
-                },
-              );
-            },
+                }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                // If data fetching is successful, display the list of shops
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, // Set the number of columns in the grid
+                    crossAxisSpacing: 10, // Set the spacing between columns
+                    mainAxisSpacing: 10, // Set the spacing between rows
+                  ),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    // Extract data from the document snapshot
+                    var doc = snapshot.data!.docs[index];
+                    var id = doc.id;
+                    var name = doc['shopName'];
+                    var location = doc['location'];
+                    var contact = doc['phoneNo'];
+                    var category = doc['category'];
+                    // Return a ListTile widget for each shop
+                    return Card(
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(name,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 4),
+                            Text('$location'),
+                            Text('$contact'),
+                            Text('$category'),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
           // Expanded(
           //   child: Padding(
           //     padding: const EdgeInsets.symmetric(),

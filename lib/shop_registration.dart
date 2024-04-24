@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 class Shopreg extends StatefulWidget {
   const Shopreg({Key? key}) : super(key: key);
@@ -12,9 +13,8 @@ class _ShopregState extends State<Shopreg> {
   final _shopRegNoController = TextEditingController();
   final _ownerNameController = TextEditingController();
   final _phoneNoController = TextEditingController();
+  final _locationController = TextEditingController();
   String _selectedCategory = '';
-  String _selectedOperatingHours = '';
-  String _selectedDeliveryPreference = '';
   bool _termsAndConditionsAccepted = false;
 
   @override
@@ -23,6 +23,7 @@ class _ShopregState extends State<Shopreg> {
     _shopRegNoController.dispose();
     _ownerNameController.dispose();
     _phoneNoController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -94,6 +95,19 @@ class _ShopregState extends State<Shopreg> {
               ),
               SizedBox(height: 16),
               Text(
+                'Location',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter location',
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
                 'Shop Category',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
@@ -119,54 +133,10 @@ class _ShopregState extends State<Shopreg> {
               ),
               SizedBox(height: 16),
               Text(
-                'Operating Hours',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _selectedOperatingHours,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedOperatingHours = newValue!;
-                  });
-                },
-                items: <String>['', 'Morning', 'Afternoon', 'Evening']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Select operating hours',
-                ),
-              ),
-              SizedBox(height: 16),
-              Text(
                 'Delivery Preferences',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _selectedDeliveryPreference,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedDeliveryPreference = newValue!;
-                  });
-                },
-                items: <String>['', 'Scheduled Delivery', 'On-Demand Delivery']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Select delivery preferences',
-                ),
-              ),
               SizedBox(height: 16),
               Row(
                 children: [
@@ -188,7 +158,7 @@ class _ShopregState extends State<Shopreg> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add your logic to register the shop
+                    _registerShop();
                   },
                   child: Text('Register Shop'),
                   style: ElevatedButton.styleFrom(
@@ -203,5 +173,49 @@ class _ShopregState extends State<Shopreg> {
         ),
       ),
     );
+  }
+
+  void _registerShop() {
+    // Add your logic to register the shop
+    String shopName = _shopNameController.text;
+    String shopRegNo = _shopRegNoController.text;
+    String ownerName = _ownerNameController.text;
+    String phoneNo = _phoneNoController.text;
+    String location = _locationController.text;
+    String category = _selectedCategory;
+
+    // Check if all required fields are filled
+    if (shopName.isNotEmpty &&
+        shopRegNo.isNotEmpty &&
+        ownerName.isNotEmpty &&
+        phoneNo.isNotEmpty &&
+        category.isNotEmpty &&
+        location.isNotEmpty &&
+        _termsAndConditionsAccepted) {
+      // Add data to Firestore
+      FirebaseFirestore.instance.collection('Shop').add({
+        'shopName': shopName,
+        'shopRegNo': shopRegNo,
+        'ownerName': ownerName,
+        'phoneNo': phoneNo,
+        'location': location,
+        'category': category,
+      }).then((value) {
+        // Success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Shop registered successfully')),
+        );
+      }).catchError((error) {
+        // Error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to register shop: $error')),
+        );
+      });
+    } else {
+      // Show error if any field is empty or terms not accepted
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill all fields and accept terms')),
+      );
+    }
   }
 }

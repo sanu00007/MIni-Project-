@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:farefinale/main.dart';
 import 'package:farefinale/signup.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 3000), () {});
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Signup()));
+        context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   @override
