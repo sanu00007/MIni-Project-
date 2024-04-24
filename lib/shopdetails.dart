@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShopDetail {
-  final String id,contact, name, location;
+  final String id, contact, name, location;
   ShopDetail({
     required this.id,
     required this.contact,
@@ -29,3 +29,4 @@ Future<void> fetchShopDetailsFromFirestore() async {
     print("Error fetching shop details: $e");
   }
 }
+

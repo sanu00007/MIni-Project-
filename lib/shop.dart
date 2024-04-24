@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farefinale/widgets/location.dart';
 import 'package:flutter/material.dart';
 import 'package:farefinale/home.dart';
@@ -212,44 +213,33 @@ class ShopDesign extends StatelessWidget {
   final ShopDetail design;
   final VoidCallback onTap;
 
-  const ShopDesign({
+  ShopDesign({
     Key? key,
     required this.design,
     required this.onTap,
   }) : super(key: key);
 
+  final CollectionReference shops =
+      FirebaseFirestore.instance.collection('Shop');
+
   @override
   Widget build(BuildContext context) {
-    print(ShopDetails);
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 4,
-            ),
-            child: Center(
-              child: Text(
-                design.name,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 1,
-            ),
-            child: Center(
-              child: Text(
-                design.location,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ),
-          )
-        ],
-      ),
+      child: StreamBuilder(
+          stream: shops.snapshots(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  final DocumentSnapshot shopSnap = snapshot.data.docs[index];
+                  print(shopSnap['name']);
+                },
+              );
+            }
+            return Container();
+          }),
     );
   }
 }
