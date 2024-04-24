@@ -158,10 +158,13 @@ class _FoodItemPageState extends State<FoodItemPage> {
             future: FirebaseFirestore.instance.collection('Shop').get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(); // Display a loading indicator while fetching data
+                return CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), 
+                  strokeWidth: 2,
+                ); 
               }
               if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}'); // Display an error message if data fetching fails
+                return Text('Error: ${snapshot.error}'); 
               }
 
               // If data fetching is successful, display the list of shops
