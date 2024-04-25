@@ -1,34 +1,25 @@
 import 'package:farefinale/home.dart';
-import 'package:farefinale/main.dart';
-import 'package:farefinale/onboard.dart';
-import 'package:farefinale/shop_registration.dart';
+import 'package:farefinale/product.dart';
 import 'package:farefinale/resources/auth_methods.dart';
-import 'package:farefinale/shoplogin.dart';
+import 'package:farefinale/shop_registration.dart';
+import 'package:farefinale/signup.dart';
 import 'package:farefinale/utils/dimension.dart';
 import 'package:farefinale/utils/utils.dart';
 import 'package:farefinale/widgets/textfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 
-
-class Signup extends StatefulWidget {
-  const Signup({Key? key}) : super(key: key);
+class ShopLogin extends StatefulWidget {
+  const ShopLogin({super.key});
 
   @override
-  State<Signup> createState() => _SignupState();
+  State<ShopLogin> createState() => _ShopLoginState();
 }
 
-class _SignupState extends State<Signup> {
+class _ShopLoginState extends State<ShopLogin> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-
   bool _isLoading = false;
-
   @override
   void dispose() {
     super.dispose();
@@ -36,17 +27,15 @@ class _SignupState extends State<Signup> {
     _passController.dispose();
   }
 
-  void signUpUser() async {
+  void loginUser() async {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthMethods().signUpUser(
-      email: _emailController.text,
-      password: _passController.text,
-    );
+    String res = await AuthMethods().loginUser(
+        email: _emailController.text, password: _passController.text);
     if (res == "success") {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Onboard()));
+          MaterialPageRoute(builder: (context) => const Product()));
     } else {
       showSnackbar(res, context);
     }
@@ -55,46 +44,10 @@ class _SignupState extends State<Signup> {
     });
   }
 
-  void navigateToLogin() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Login()));
+  void navigateTosignup() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const Shopreg()));
   }
-
-  void navigateToOwner() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => ShopLogin()));
-  }
-
-  void _signInWithGoogle() async {
-  try {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
-
-      final User? user = userCredential.user;
-
-      // final String? email = user?.email;
-      // final String? displayName = user?.displayName;
-      // final String? photoURL = user?.photoURL;
-
-      if (user != null) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Onboard()));
-      }
-    } else {
-      print('Google sign-in canceled');
-    }
-  } catch (error) {
-    print('Error signing in with Google: $error');
-  }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +90,7 @@ class _SignupState extends State<Signup> {
                   height: 24,
                 ),
                 InkWell(
-                  onTap: signUpUser,
+                  onTap: loginUser,
                   child: Container(
                     width: double.infinity,
                     alignment: Alignment.center,
@@ -155,48 +108,28 @@ class _SignupState extends State<Signup> {
                             ),
                           )
                         : const Text(
-                            'Sign Up',
+                            'Login',
                             style: TextStyle(color: Colors.white),
                           ),
                   ),
                 ),
-                  const Text('OR',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
-
-                 SignInButton(
-                   Buttons.google,
-                   onPressed:  _signInWithGoogle,
-                ),
-
                 const SizedBox(
                   height: 24,
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account?"),
+                    const Text("If you don't have an account?"),
                     GestureDetector(
-                      onTap: navigateToLogin,
+                      onTap: navigateTosignup,
                       child: const Text(
-                        "Login",
+                        "Register Shop",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     )
                   ],
                 ),
                 const SizedBox(height: 16), // Adjusted spacing
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: navigateToOwner,
-                      child: const Text(
-                        "Are you a Shop Owner?",
-                        style: TextStyle(fontWeight: FontWeight.w800),
-                      ),
-                    )
-                  ],
-                ),
               ],
             ),
           ),
