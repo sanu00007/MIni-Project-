@@ -5,7 +5,10 @@ import 'package:farefinale/shoplogin.dart';
 import 'package:farefinale/utils/dimension.dart';
 import 'package:farefinale/utils/utils.dart';
 import 'package:farefinale/widgets/textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -54,6 +57,23 @@ class _SignupState extends State<Signup> {
   void navigateToOwner() {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => ShopLogin()));
+  }
+
+  final _auth = FirebaseAuth.instance;
+  Future<UserCredential?> loginWithgoogle() async {
+    try {
+      final googleUser = await GoogleSignIn().signIn();
+
+      final googleAuth = await googleUser?.authentication;
+
+      final cred = GoogleAuthProvider.credential(
+          idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
+
+      return await _auth.signInWithCredential(cred);
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
   }
 
   @override
@@ -120,9 +140,20 @@ class _SignupState extends State<Signup> {
                           ),
                   ),
                 ),
+                const Text(
+                  'OR',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                ),
+
+                SignInButton(
+                  Buttons.google,
+                  onPressed: loginWithgoogle
+                ),
+
                 const SizedBox(
                   height: 24,
                 ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
