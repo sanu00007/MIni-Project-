@@ -62,7 +62,7 @@ class _SignupState extends State<Signup> {
   }
 
   final _auth = FirebaseAuth.instance;
-  Future<UserCredential?> loginWithgoogle() async {
+  Future<UserCredential?> loginWithgoogle(BuildContext context) async {
     try {
       final googleUser = await GoogleSignIn().signIn();
 
@@ -72,8 +72,20 @@ class _SignupState extends State<Signup> {
         final cred = GoogleAuthProvider.credential(
             idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-        return await _auth.signInWithCredential(cred);
+        final userCredential = await _auth.signInWithCredential(cred);
 
+        // Check if userCredential is not null and navigate to onboard screen
+        if (userCredential != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  Onboard(), // Replace 'Onboard' with your onboard screen
+            ),
+          );
+
+          return userCredential;
+        }
       }
     } catch (e) {
       print(e.toString());
@@ -149,9 +161,12 @@ class _SignupState extends State<Signup> {
                   'OR',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
-                
+
                 //google signin
-                SignInButton(Buttons.google, onPressed: loginWithgoogle),
+                SignInButton(
+                  Buttons.google,
+                  onPressed: () => loginWithgoogle(context),
+                ),
 
                 const SizedBox(
                   height: 24,
