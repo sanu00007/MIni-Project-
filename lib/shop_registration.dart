@@ -1,3 +1,5 @@
+import 'package:farefinale/product.dart';
+import 'package:farefinale/widgets/location.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
@@ -25,6 +27,11 @@ class _ShopregState extends State<Shopreg> {
     _phoneNoController.dispose();
     _locationController.dispose();
     super.dispose();
+  }
+
+  void navigatetoproduct() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const Product()));
   }
 
   @override
@@ -203,8 +210,8 @@ class _ShopregState extends State<Shopreg> {
       }).then((value) {
         // Success message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Shop registered successfully')),
-        );
+            SnackBar(content: Text('Shop registered successfully')));
+        navigatetoproduct();
       }).catchError((error) {
         // Error message
         ScaffoldMessenger.of(context).showSnackBar(
