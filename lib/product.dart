@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:farefinale/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farefinale/signup.dart'; 
 
 class ProductModel {
   String name;
@@ -27,9 +29,9 @@ class Product extends StatefulWidget {
 class _ProductPageState extends State<Product> {
   final List<ProductModel> _products = [];
   String _selectedProductType = '';
-  String _productName = '';
+  final TextEditingController _productNameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   DateTime? _selectedExpiryDate;
-  double _price = 0.0;
   bool _isFeatured = false;
 
   @override
@@ -50,9 +52,10 @@ class _ProductPageState extends State<Product> {
             ),
             SizedBox(height: 8),
             TextFormField(
+              controller: _productNameController,
               onChanged: (value) {
                 setState(() {
-                  _productName = value;
+                  // No need to use _productName variable
                 });
               },
               decoration: InputDecoration(
@@ -128,10 +131,9 @@ class _ProductPageState extends State<Product> {
             ),
             SizedBox(height: 8),
             TextFormField(
+              controller: _priceController,
               onChanged: (value) {
-                setState(() {
-                  _price = double.parse(value);
-                });
+                // No need to setState for _price
               },
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -193,7 +195,7 @@ class _ProductPageState extends State<Product> {
             SizedBox(height: 16),
             TextButton(
               onPressed: () {
-                _finishAddingProducts();
+                // Placeholder for Finish Adding Products button action
               },
               child: Text(
                 'Finish Adding Products',
@@ -207,33 +209,46 @@ class _ProductPageState extends State<Product> {
   }
 
   void _addProduct() {
-    if (_productName.isNotEmpty &&
+    String productName = _productNameController.text;
+    double price = double.parse(_priceController.text);
+    // Check if all required fields are filled
+    if (productName.isNotEmpty &&
         _selectedProductType.isNotEmpty &&
         _selectedExpiryDate != null) {
-      setState(() {
-        _products.add(
-          ProductModel(
-            name: _productName,
-            type: _selectedProductType,
-            expiryDate: _selectedExpiryDate!,
-            price: _price,
-            isFeatured: _isFeatured,
-          ),
+      // Get the current user UID
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      // Add data to Firestore
+      FirebaseFirestore.instance.collection('Products').add({
+        'name': productName,
+        'type': _selectedProductType,
+        'expiryDate': _selectedExpiryDate!,
+        'price': price,
+        'isFeatured': _isFeatured,
+        'uid': uid, // Add user UID to the product data
+      }).then((value) {
+        // Success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Product added successfully')),
         );
-        _productName = '';
+
+        // Clear input fields after successful addition
+        _productNameController.clear();
         _selectedProductType = '';
         _selectedExpiryDate = null;
-        _price = 0.0;
+        _priceController.clear();
         _isFeatured = false;
+      }).catchError((error) {
+        // Error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add product: $error')),
+        );
       });
+    } else {
+      // Show error if any field is empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields')),
+      );
     }
-  }
-
-  void _finishAddingProducts() {
-    // Navigate to login page
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Signup()),
-    );
   }
 }
