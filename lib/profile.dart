@@ -13,6 +13,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
+  late String userName;
+
   @override
   void initState() {
     super.initState();
@@ -23,6 +25,9 @@ class _ProfilePageState extends State<ProfilePage> {
     User? currentUser = _auth.currentUser;
     setState(() {
       _user = currentUser;
+      userName = _user?.email != null && _user!.email!.contains('@')
+          ? _user!.email!.split('@')[0]
+          : 'Loading...';
     });
   }
 
@@ -72,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Text(
-                          '1234 Street Name,\nCity, Country',
+                          '$userName',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
