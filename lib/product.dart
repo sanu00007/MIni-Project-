@@ -1,7 +1,8 @@
+import 'package:farefinale/main.dart';
+import 'package:farefinale/resources/auth_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:farefinale/signup.dart'; 
 
 class ProductModel {
   String name;
@@ -171,31 +172,14 @@ class _ProductPageState extends State<Product> {
               ),
             ),
             SizedBox(height: 32),
-            Text(
-              'Added Products:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _products.map((product) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Name: ${product.name}'),
-                    Text('Type: ${product.type}'),
-                    Text('Expiry Date: ${product.expiryDate}'),
-                    Text('Price: ${product.price}'),
-                    Text('Featured: ${product.isFeatured}'),
-                    Divider(),
-                  ],
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 16),
             TextButton(
-              onPressed: () {
-                // Placeholder for Finish Adding Products button action
+              onPressed: () async {
+                await AuthMethods().signOut();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Login()),
+                  (route) => false,
+                );
               },
               child: Text(
                 'Finish Adding Products',
