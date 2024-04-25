@@ -1,4 +1,6 @@
 import 'package:farefinale/product.dart';
+import 'package:farefinale/resources/auth_methods.dart';
+import 'package:farefinale/utils/utils.dart';
 import 'package:farefinale/widgets/location.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
@@ -11,6 +13,8 @@ class Shopreg extends StatefulWidget {
 }
 
 class _ShopregState extends State<Shopreg> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
   final _shopNameController = TextEditingController();
   final _shopRegNoController = TextEditingController();
   final _ownerNameController = TextEditingController();
@@ -18,6 +22,7 @@ class _ShopregState extends State<Shopreg> {
   final _locationController = TextEditingController();
   String _selectedCategory = '';
   bool _termsAndConditionsAccepted = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -26,7 +31,28 @@ class _ShopregState extends State<Shopreg> {
     _ownerNameController.dispose();
     _phoneNoController.dispose();
     _locationController.dispose();
+    _emailController.dispose();
+    _passController.dispose();
     super.dispose();
+  }
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passController.text,
+    );
+    if (res == "success") {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const Product()));
+    } else {
+      showSnackbar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void navigatetoproduct() {
@@ -58,6 +84,33 @@ class _ShopregState extends State<Shopreg> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter shop name',
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Email',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter your mail',
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Password',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _passController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter password',
                 ),
               ),
               SizedBox(height: 16),
@@ -166,6 +219,7 @@ class _ShopregState extends State<Shopreg> {
                 child: ElevatedButton(
                   onPressed: () {
                     _registerShop();
+                    signUpUser();
                   },
                   child: Text('Register Shop'),
                   style: ElevatedButton.styleFrom(
@@ -190,7 +244,7 @@ class _ShopregState extends State<Shopreg> {
     String phoneNo = _phoneNoController.text;
     String location = _locationController.text;
     String category = _selectedCategory;
-
+    String mail = _emailController.text;
     // Check if all required fields are filled
     if (shopName.isNotEmpty &&
         shopRegNo.isNotEmpty &&
@@ -198,6 +252,7 @@ class _ShopregState extends State<Shopreg> {
         phoneNo.isNotEmpty &&
         category.isNotEmpty &&
         location.isNotEmpty &&
+        mail.isNotEmpty &&
         _termsAndConditionsAccepted) {
       // Add data to Firestore
       FirebaseFirestore.instance.collection('Shop').add({
@@ -207,6 +262,7 @@ class _ShopregState extends State<Shopreg> {
         'phoneNo': phoneNo,
         'location': location,
         'category': category,
+        'mail': mail,
       }).then((value) {
         // Success message
         ScaffoldMessenger.of(context).showSnackBar(
