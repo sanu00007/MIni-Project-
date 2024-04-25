@@ -1,7 +1,5 @@
-import 'package:farefinale/home.dart';
 import 'package:farefinale/main.dart';
 import 'package:farefinale/onboard.dart';
-import 'package:farefinale/shop_registration.dart';
 import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/shoplogin.dart';
 import 'package:farefinale/utils/dimension.dart';

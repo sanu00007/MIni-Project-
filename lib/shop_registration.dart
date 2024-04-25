@@ -1,7 +1,6 @@
 import 'package:farefinale/product.dart';
 import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/utils/utils.dart';
-import 'package:farefinale/widgets/location.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 

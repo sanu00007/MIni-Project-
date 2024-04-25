@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:farefinale/widgets/location.dart';
 import 'package:flutter/material.dart';
 import 'package:farefinale/home.dart';
 import 'package:farefinale/profile.dart';
-import 'package:farefinale/shopdetails.dart';
 import 'package:farefinale/widgets/searchresults.dart';
 
 class FoodItemPage extends StatefulWidget {
