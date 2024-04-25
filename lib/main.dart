@@ -3,6 +3,7 @@ import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/shopdetails.dart';
 import 'package:farefinale/signup.dart';
 import 'package:farefinale/utils/utils.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +15,7 @@ import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await fetchShopDetailsFromFirestore();
+
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -31,6 +32,9 @@ Future main() async {
     );
   }
 
+  // await FirebaseAppCheck.instance.activate(
+  //   androidSafetyNet: SafetyNetAppCheckProviderFactory(),
+  // );
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: StreamBuilder(

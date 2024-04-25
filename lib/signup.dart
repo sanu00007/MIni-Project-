@@ -66,12 +66,15 @@ class _SignupState extends State<Signup> {
     try {
       final googleUser = await GoogleSignIn().signIn();
 
-      final googleAuth = await googleUser?.authentication;
+      if (googleUser != null) {
+        final googleAuth = await googleUser.authentication;
 
-      final cred = GoogleAuthProvider.credential(
-          idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
+        final cred = GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-      return await _auth.signInWithCredential(cred);
+        return await _auth.signInWithCredential(cred);
+
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -146,11 +149,9 @@ class _SignupState extends State<Signup> {
                   'OR',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
-
-                SignInButton(
-                  Buttons.google,
-                  onPressed: loginWithgoogle
-                ),
+                
+                //google signin
+                SignInButton(Buttons.google, onPressed: loginWithgoogle),
 
                 const SizedBox(
                   height: 24,
