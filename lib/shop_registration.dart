@@ -44,6 +44,7 @@ class _ShopregState extends State<Shopreg> {
       password: _passController.text,
     );
     if (res == "success") {
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const Product()));
     } else {
