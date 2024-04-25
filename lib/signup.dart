@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
-
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
 
@@ -23,9 +22,6 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   bool _isLoading = false;
 
@@ -65,36 +61,22 @@ class _SignupState extends State<Signup> {
         context, MaterialPageRoute(builder: (context) => ShopLogin()));
   }
 
-  void _signInWithGoogle() async {
-  try {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  final _auth = FirebaseAuth.instance;
+  Future<UserCredential?> loginWithgoogle() async {
+    try {
+      final googleUser = await GoogleSignIn().signIn();
 
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final googleAuth = await googleUser?.authentication;
 
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+      final cred = GoogleAuthProvider.credential(
+          idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
-
-      final User? user = userCredential.user;
-
-      // final String? email = user?.email;
-      // final String? displayName = user?.displayName;
-      // final String? photoURL = user?.photoURL;
-
-      if (user != null) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Onboard()));
-      }
-    } else {
-      print('Google sign-in canceled');
+      return await _auth.signInWithCredential(cred);
+    } catch (e) {
+      print(e.toString());
     }
-  } catch (error) {
-    print('Error signing in with Google: $error');
+    return null;
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -160,11 +142,14 @@ class _SignupState extends State<Signup> {
                           ),
                   ),
                 ),
-                  const Text('OR',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
+                const Text(
+                  'OR',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                ),
 
-                 SignInButton(
-                   Buttons.google,
-                   onPressed:  _signInWithGoogle,
+                SignInButton(
+                  Buttons.google,
+                  onPressed: loginWithgoogle
                 ),
 
                 const SizedBox(
