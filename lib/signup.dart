@@ -6,7 +6,11 @@ import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/utils/dimension.dart';
 import 'package:farefinale/utils/utils.dart';
 import 'package:farefinale/widgets/textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_button/sign_in_button.dart';
+
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -18,6 +22,9 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   bool _isLoading = false;
 
@@ -56,6 +63,37 @@ class _SignupState extends State<Signup> {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Shopreg()));
   }
+
+  void _signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+
+      final User? user = userCredential.user;
+
+      // final String? email = user?.email;
+      // final String? displayName = user?.displayName;
+      // final String? photoURL = user?.photoURL;
+
+      if (user != null) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const Onboard()));
+      }
+    } else {
+      print('Google sign-in canceled');
+    }
+  } catch (error) {
+    print('Error signing in with Google: $error');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +159,17 @@ class _SignupState extends State<Signup> {
                           ),
                   ),
                 ),
+                  const Text('OR',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
+
+                 SignInButton(
+                   Buttons.google,
+                   onPressed:  _signInWithGoogle,
+                ),
+
                 const SizedBox(
                   height: 24,
                 ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
