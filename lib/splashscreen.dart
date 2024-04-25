@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:farefinale/main.dart';
+import 'package:farefinale/product.dart';
 import 'package:farefinale/signup.dart';
 import 'package:flutter/material.dart';
 
