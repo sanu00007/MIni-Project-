@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:farefinale/dummy.dart';
 import 'package:farefinale/shop.dart';
 import 'package:farefinale/profile.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,10 @@ class _MyAppState extends State<MyApp> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacement((context),
+                  MaterialPageRoute(builder: (context) => const Dummy()));
+            },
             icon: Icon(
               Icons.favorite,
               size: 30,
@@ -185,7 +189,6 @@ class _MyAppState extends State<MyApp> {
                           'assets/images/download (6).jpg',
                           fit: BoxFit.cover,
                         ),
-                        
                       ),
                     ),
                     const SizedBox(
@@ -361,7 +364,6 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
-
             SizedBox(
               height: 18,
             ),
