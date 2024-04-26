@@ -21,7 +21,17 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": []
+        },
+
+        "appcheck": {
+          "providers": [
+            {
+              "provider": "androidSafetyNet",
+              "factory": "SafetyNetAppCheckProviderFactory"
+            }
+          ]
         }
+        
       }
     }
   ],

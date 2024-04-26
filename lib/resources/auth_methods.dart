@@ -5,7 +5,7 @@ class AuthMethods {
   //signin
   Future<String> signUpUser({
     required String email,
-    required String password,
+    required String password, required String username,
   }) async {
     String res = "Some error occured";
 

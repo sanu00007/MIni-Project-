@@ -3,6 +3,8 @@ import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/shopdetails.dart';
 import 'package:farefinale/signup.dart';
 import 'package:farefinale/utils/utils.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +16,7 @@ import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await fetchShopDetailsFromFirestore();
+
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -30,6 +32,8 @@ Future main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
+
+  FirebaseAppCheck.instance.activate();
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,

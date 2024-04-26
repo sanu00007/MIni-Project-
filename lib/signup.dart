@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farefinale/main.dart';
 import 'package:farefinale/onboard.dart';
 import 'package:farefinale/resources/auth_methods.dart';
@@ -20,6 +21,7 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   bool _isLoading = false;
 
@@ -28,6 +30,7 @@ class _SignupState extends State<Signup> {
     super.dispose();
     _emailController.dispose();
     _passController.dispose();
+    _usernameController.dispose();
   }
 
   void signUpUser() async {
@@ -35,10 +38,25 @@ class _SignupState extends State<Signup> {
       _isLoading = true;
     });
     String res = await AuthMethods().signUpUser(
+      username : _usernameController.text,
       email: _emailController.text,
       password: _passController.text,
     );
     if (res == "success") {
+      FirebaseFirestore.instance.collection('User').add({
+        'name': _usernameController.text,
+        'email': _emailController.text,
+        'photourl' : "",
+      }).then((value) {
+        // Success message for adding shop owner data
+        // You can navigate to the next screen or perform any other actions here
+      }).catchError((error) {
+        // Error message for adding user data
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to signup :$error')),
+        );
+      });
+
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const Onboard()));
     } else {
@@ -60,16 +78,45 @@ class _SignupState extends State<Signup> {
   }
 
   final _auth = FirebaseAuth.instance;
-  Future<UserCredential?> loginWithgoogle() async {
+  Future<UserCredential?> loginWithgoogle(BuildContext context) async {
     try {
       final googleUser = await GoogleSignIn().signIn();
 
-      final googleAuth = await googleUser?.authentication;
+      if (googleUser != null) {
+        final googleAuth = await googleUser.authentication;
 
-      final cred = GoogleAuthProvider.credential(
-          idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
+        final cred = GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-      return await _auth.signInWithCredential(cred);
+        final userCredential = await _auth.signInWithCredential(cred);
+
+         // Access user information
+        final User user = userCredential.user!;
+
+        final String? username = user.displayName;
+        final String? photoUrl = user.photoURL;
+        final String? email = user.email;
+
+         FirebaseFirestore.instance.collection('User').add({
+           'username': username,
+           'photoUrl': photoUrl,
+           'email': email,
+        });
+
+        // Check if userCredential is not null and navigate to onboard screen
+        // ignore: unnecessary_null_comparison
+        if (userCredential != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  Onboard(), // Replace 'Onboard' with your onboard screen
+            ),
+          );
+
+          return userCredential;
+        }
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -98,6 +145,14 @@ class _SignupState extends State<Signup> {
                 ),
                 const SizedBox(
                   height: 30,
+                ),
+                Textfieldinput(
+                  hintText: "Enter your username",
+                  textInputType: TextInputType.text,
+                  textEditingController: _usernameController,
+                ),
+                const SizedBox(
+                  height: 24,
                 ),
                 Textfieldinput(
                   hintText: "Enter your email",
@@ -145,9 +200,10 @@ class _SignupState extends State<Signup> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
 
+                //google signin
                 SignInButton(
                   Buttons.google,
-                  onPressed: loginWithgoogle
+                  onPressed: () => loginWithgoogle(context),
                 ),
 
                 const SizedBox(
