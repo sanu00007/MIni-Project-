@@ -199,7 +199,6 @@ class _ProductPageState extends State<Product> {
     if (productName.isNotEmpty &&
         _selectedProductType.isNotEmpty &&
         _selectedExpiryDate != null) {
-      // Get the current user UID
 
       // Add data to Firestore
       FirebaseFirestore.instance.collection('Products').add({
