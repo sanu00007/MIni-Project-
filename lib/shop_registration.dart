@@ -42,6 +42,7 @@ class _ShopregState extends State<Shopreg> {
     String res = await AuthMethods().signUpUser(
       email: _emailController.text,
       password: _passController.text,
+      username: _ownerNameController.text,
     );
     if (res == "success") {
       // ignore: use_build_context_synchronously
@@ -245,6 +246,8 @@ class _ShopregState extends State<Shopreg> {
     String location = _locationController.text;
     String category = _selectedCategory;
     String mail = _emailController.text;
+
+    String shop_id = "";
     // Check if all required fields are filled
     if (shopName.isNotEmpty &&
         shopRegNo.isNotEmpty &&
@@ -265,9 +268,25 @@ class _ShopregState extends State<Shopreg> {
         'mail': mail,
       }).then((value) {
         // Success message
+        shop_id = value.id;
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Shop registered successfully')));
+
+         FirebaseFirestore.instance.collection('Shop Owners').add({
+        'name': ownerName,
+        'email': mail,
+        'shop_id': shop_id,
+      }).then((value) {
+        // Success message for adding shop owner data
+        // You can navigate to the next screen or perform any other actions here
         navigatetoproduct();
+      }).catchError((error) {
+        // Error message for adding shop owner data
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to register shop owner: $error')),
+        );
+      });
+
       }).catchError((error) {
         // Error message
         ScaffoldMessenger.of(context).showSnackBar(
