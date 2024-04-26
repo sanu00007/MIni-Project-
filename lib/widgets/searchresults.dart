@@ -8,203 +8,128 @@ class SearchResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.red, // Change primary color to red
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              size: 20,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 20,
+            color: Colors.black,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.search,
               color: Colors.black,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'What are you looking for',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'What are you looking for',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor:
-                            Color.fromARGB(255, 242, 205, 209), // Text color
-                      ),
-                      child: const Text('All'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor:
-                            Color.fromARGB(255, 242, 205, 209), // Text color
-                      ),
-                      child: const Text('Produce'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor:
-                            Color.fromARGB(255, 242, 205, 209), // Text color
-                      ),
-                      child: const Text('Dairy'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor:
-                            Color.fromARGB(255, 242, 205, 209), // Text color
-                      ),
-                      child: const Text('Bakery'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // Search Field
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Create a ListView for images
-                GridView.count(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  children: [
-                    buildListItem(
-                      image: 'assets/images/bakery.png',
-                      category: 'Bakery',
-                      isExpired: 'In One days',
-                      startingPrice: '\$5.99',
-                    ),
-                    buildListItem(
-                      image: 'assets/images/beverages.png',
-                      category: 'Beverages',
-                      isExpired: 'In Two days',
-                      startingPrice: '\$2.49',
-                    ),
-                    buildListItem(
-                      image: 'assets/images/freshfruits.png',
-                      category: 'Fresh Fruits',
-                      isExpired: "In Two days",
-                      startingPrice: '\$3.99',
-                    ),
-                    buildListItem(
-                      image: 'assets/images/download (2).jpg',
-                      category: 'Chips',
-                      isExpired: 'In Three days',
-                      startingPrice: '\$1.99',
-                    ),
-                    buildListItem(
-                      image: 'assets/images/grains.png',
-                      category: 'Grains',
-                      isExpired: 'In Four days',
-                      startingPrice: '\$4.49',
-                    ),
-                    buildListItem(
-                      image: 'assets/images/grocery.png',
-                      category: 'Grocery',
-                      isExpired: 'In 6 days',
-                      startingPrice: '\$2.99',
-                    ),
-                    buildListItem(
-                      image: 'assets/images/oils.png',
-                      category: 'Oils',
-                      isExpired: 'In 6 days',
-                      startingPrice: '\$6.99',
-                    ),
-                    buildListItem(
-                      image: 'assets/images/protein.png',
-                      category: 'Protein',
-                      isExpired: 'In 7 days',
-                      startingPrice: '\$7.99',
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: const Color.fromARGB(
-              255, 252, 252, 252), // Background color of the BottomAppBar
-          shape: CircularNotchedRectangle(), // Notch in the bottom app bar
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyApp()));
-                },
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildCategoryButton('All'),
+                  _buildCategoryButton('Produce'),
+                  _buildCategoryButton('Dairy'),
+                  _buildCategoryButton('Bakery'),
+                ],
               ),
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {},
+              const SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
               ),
-              IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => FoodItemPage()));
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.person),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfilePage()));
-                },
+              const SizedBox(height: 20),
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: List.generate(
+                  _products.length,
+                  (index) => _buildProductItem(context, _products[index]),
+                ),
               ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        color: const Color.fromARGB(255, 252, 252, 252),
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FoodItemPage()),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget buildListItem({
-    required String image,
-    required String category,
-    required String isExpired,
-    required String startingPrice,
-  }) {
+  Widget _buildCategoryButton(String text) {
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(255, 242, 205, 209),
+      ),
+      child: Text(text),
+    );
+  }
+
+  Widget _buildProductItem(BuildContext context, Product product) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -214,7 +139,7 @@ class SearchResults extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.asset(
-            image,
+            product.image,
             height: 100,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -225,16 +150,16 @@ class SearchResults extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Category: $category',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  'Category: ${product.category}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Price: $startingPrice',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  'Price: ${product.startingPrice}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Expiry: $isExpired',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  'Expiry: ${product.isExpired}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -245,6 +170,67 @@ class SearchResults extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(const SearchResults());
+class Product {
+  final String image;
+  final String category;
+  final String isExpired;
+  final String startingPrice;
+
+  Product({
+    required this.image,
+    required this.category,
+    required this.isExpired,
+    required this.startingPrice,
+  });
 }
+
+final List<Product> _products = [
+  Product(
+    image: 'assets/images/bakery.png',
+    category: 'Bakery',
+    isExpired: 'In One day',
+    startingPrice: '\$5.99',
+  ),
+  Product(
+    image: 'assets/images/beverages.png',
+    category: 'Beverages',
+    isExpired: 'In Two days',
+    startingPrice: '\$2.49',
+  ),
+  Product(
+    image: 'assets/images/freshfruits.png',
+    category: 'Fresh Fruits',
+    isExpired: 'In Two days',
+    startingPrice: '\$3.99',
+  ),
+  Product(
+    image: 'assets/images/crisps.png',
+    category: 'Chips',
+    isExpired: 'In Three days',
+    startingPrice: '\$1.99',
+  ),
+  Product(
+    image: 'assets/images/grains.png',
+    category: 'Grains',
+    isExpired: 'In Four days',
+    startingPrice: '\$4.49',
+  ),
+  Product(
+    image: 'assets/images/grocery.png',
+    category: 'Grocery',
+    isExpired: 'In 6 days',
+    startingPrice: '\$2.99',
+  ),
+  Product(
+    image: 'assets/images/oils.png',
+    category: 'Oils',
+    isExpired: 'In 6 days',
+    startingPrice: '\$6.99',
+  ),
+  Product(
+    image: 'assets/images/protein.png',
+    category: 'Protein',
+    isExpired: 'In 7 days',
+    startingPrice: '\$7.99',
+  ),
+];
