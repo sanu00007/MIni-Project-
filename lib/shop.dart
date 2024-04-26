@@ -204,24 +204,6 @@ class _FoodItemPageState extends State<FoodItemPage> {
               },
             ),
           ),
-          // Expanded(
-          //   child: Padding(
-          //     padding: const EdgeInsets.symmetric(),
-          //     child: GridView.builder(
-          //       itemCount: ShopDetails.length,
-          //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //           crossAxisCount: 3, childAspectRatio: 0.65),
-          //       itemBuilder: (context, index) => ShopDesign(
-          //         design: ShopDetails[index],
-          //         onTap: () {
-          //           // Define the action to be performed when the image is tapped
-          //           print('Image tapped! Index: $index');
-          //           // You can navigate to another page here if needed
-          //         },
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
