@@ -44,9 +44,9 @@ class _SignupState extends State<Signup> {
     );
     if (res == "success") {
       FirebaseFirestore.instance.collection('User').add({
-        'name': _usernameController.text,
+        'username': _usernameController.text,
         'email': _emailController.text,
-        'photourl' : "",
+        'photoUrl' : "",
       }).then((value) {
         // Success message for adding shop owner data
         // You can navigate to the next screen or perform any other actions here
