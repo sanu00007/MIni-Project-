@@ -32,8 +32,8 @@ class _ShopLoginState extends State<ShopLogin> {
     String res = await AuthMethods().loginUser(
         email: _emailController.text, password: _passController.text);
     if (res == "success") {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Product()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Product()));
     } else {
       showSnackbar(res, context);
     }

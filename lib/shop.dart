@@ -185,7 +185,7 @@ class _FoodItemPageState extends State<FoodItemPage> {
                     return Card(
                       elevation: 2,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(6),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

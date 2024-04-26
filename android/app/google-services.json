@@ -12,7 +12,28 @@
           "package_name": "com.example.farefinale"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "969641690633-btah8p5tobpd94garkbem000i82g4uel.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.farefinale",
+            "certificate_hash": "2b05dc2110e3140bbcf4894efeebb2a697480f8d"
+          }
+        },
+        {
+          "client_id": "969641690633-vvtg2os7nleshtnpofubeq3r5b1o04m7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.farefinale",
+            "certificate_hash": "3615d83966bf98f2db600ce3a166bf7d436201f7"
+          }
+        },
+        {
+          "client_id": "969641690633-n3234fkgmjughbg0qm2cnmf6sq1jgnos.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCTkhm30Y4yZSTS92eKlopfqEDDgXwZkgE"
@@ -20,18 +41,20 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
-        },
-
-        "appcheck": {
-          "providers": [
+          "other_platform_oauth_client": [
             {
-              "provider": "androidSafetyNet",
-              "factory": "SafetyNetAppCheckProviderFactory"
+              "client_id": "969641690633-n3234fkgmjughbg0qm2cnmf6sq1jgnos.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969641690633-233h5r5d23au5dka9q0bfq7n31bteckv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.farefinale"
+              }
             }
           ]
         }
-        
       }
     }
   ],

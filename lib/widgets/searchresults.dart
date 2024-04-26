@@ -220,7 +220,7 @@ class SearchResults extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

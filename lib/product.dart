@@ -200,7 +200,6 @@ class _ProductPageState extends State<Product> {
         _selectedProductType.isNotEmpty &&
         _selectedExpiryDate != null) {
       // Get the current user UID
-      String uid = FirebaseAuth.instance.currentUser!.uid;
 
       // Add data to Firestore
       FirebaseFirestore.instance.collection('Products').add({
@@ -209,9 +208,8 @@ class _ProductPageState extends State<Product> {
         'expiryDate': _selectedExpiryDate!,
         'price': price,
         'isFeatured': _isFeatured,
-        'uid': uid, // Add user UID to the product data
+        // Add user UID to the product data
       }).then((value) {
-        // Success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Product added successfully')),
         );
