@@ -1,9 +1,35 @@
 import 'package:farefinale/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:farefinale/resources/auth_methods.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  ProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
+  late String userName;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+  }
+
+  void _getUser() async {
+    User? currentUser = _auth.currentUser;
+    setState(() {
+      _user = currentUser;
+      userName = _user?.email != null && _user!.email!.contains('@')
+          ? _user!.email!.split('@')[0]
+          : 'Loading...';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +77,7 @@ class ProfilePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Text(
-                          '1234 Street Name,\nCity, Country',
+                          '$userName',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -87,7 +113,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Name: John Doe\nEmail: john.doe@example.com\nPhone: +1234567890',
+                  'Email: ${_user?.email ?? 'Loading...'}',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
