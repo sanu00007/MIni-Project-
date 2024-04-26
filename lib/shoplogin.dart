@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farefinale/product.dart';
 import 'package:farefinale/resources/auth_methods.dart';
 import 'package:farefinale/shop_registration.dart';
@@ -24,6 +25,18 @@ class _ShopLoginState extends State<ShopLogin> {
     _emailController.dispose();
     _passController.dispose();
   }
+  
+  Future<String> getShopIdFromEmail(String email) async {
+  // Query Firestore to find a shop with the given email
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Shop').where('mail', isEqualTo: email).get();
+  if (querySnapshot.docs.isNotEmpty) {
+    // Shop found, return the shop_id
+    return querySnapshot.docs[0].id;
+  } else {
+    // Shop not found
+    return '';
+  }
+}
 
   void loginUser() async {
     setState(() {
@@ -32,8 +45,10 @@ class _ShopLoginState extends State<ShopLogin> {
     String res = await AuthMethods().loginUser(
         email: _emailController.text, password: _passController.text);
     if (res == "success") {
+      String shop_id = await getShopIdFromEmail(_emailController.text);
+
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Product()));
+          .pushReplacement(MaterialPageRoute(builder: (context) => Product(shopId: shop_id)));
     } else {
       showSnackbar(res, context);
     }

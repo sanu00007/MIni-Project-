@@ -21,7 +21,8 @@ class ProductModel {
 }
 
 class Product extends StatefulWidget {
-  const Product({Key? key}) : super(key: key);
+  final String shopId;
+  const Product({Key? key, required this.shopId}) : super(key: key);
 
   @override
   _ProductPageState createState() => _ProductPageState();
@@ -162,7 +163,7 @@ class _ProductPageState extends State<Product> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                _addProduct();
+                _addProduct(widget.shopId);
               },
               child: Text('Add Product'),
               style: ElevatedButton.styleFrom(
@@ -192,7 +193,7 @@ class _ProductPageState extends State<Product> {
     );
   }
 
-  void _addProduct() {
+  void _addProduct(String shopId) {
     String productName = _productNameController.text;
     double price = double.parse(_priceController.text);
     // Check if all required fields are filled
@@ -207,6 +208,7 @@ class _ProductPageState extends State<Product> {
         'expiryDate': _selectedExpiryDate!,
         'price': price,
         'isFeatured': _isFeatured,
+        'shop_id' : shopId,
         // Add user UID to the product data
       }).then((value) {
         ScaffoldMessenger.of(context).showSnackBar(
