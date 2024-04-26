@@ -211,7 +211,6 @@ class _ProductPageState extends State<Product> {
         'isFeatured': _isFeatured,
         'uid': uid, // Add user UID to the product data
       }).then((value) {
-        // Success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Product added successfully')),
         );

@@ -272,21 +272,20 @@ class _ShopregState extends State<Shopreg> {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Shop registered successfully')));
 
-         FirebaseFirestore.instance.collection('Shop Owners').add({
-        'name': ownerName,
-        'email': mail,
-        'shop_id': shop_id,
-      }).then((value) {
-        // Success message for adding shop owner data
-        // You can navigate to the next screen or perform any other actions here
-        navigatetoproduct();
-      }).catchError((error) {
-        // Error message for adding shop owner data
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to register shop owner: $error')),
-        );
-      });
-
+        FirebaseFirestore.instance.collection('Shop Owners').add({
+          'name': ownerName,
+          'email': mail,
+          'shop_id': shop_id,
+        }).then((value) {
+          // Success message for adding shop owner data
+          // You can navigate to the next screen or perform any other actions here
+          navigatetoproduct();
+        }).catchError((error) {
+          // Error message for adding shop owner data
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to register shop owner: $error')),
+          );
+        });
       }).catchError((error) {
         // Error message
         ScaffoldMessenger.of(context).showSnackBar(
