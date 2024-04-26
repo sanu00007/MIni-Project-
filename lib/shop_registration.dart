@@ -35,29 +35,9 @@ class _ShopregState extends State<Shopreg> {
     super.dispose();
   }
 
-  void signUpUser() async {
-    setState(() {
-      _isLoading = true;
-    });
-    String res = await AuthMethods().signUpUser(
-      email: _emailController.text,
-      password: _passController.text,
-      username: _ownerNameController.text,
-    );
-    if (res == "success") {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Product()));
-    } else {
-      showSnackbar(res, context);
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void navigatetoproduct() {
+  void navigatetoproduct(String shop_id) {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Product()));
+        context, MaterialPageRoute(builder: (context) =>  Product(shopId: shop_id)));
   }
 
   @override
@@ -219,7 +199,6 @@ class _ShopregState extends State<Shopreg> {
                 child: ElevatedButton(
                   onPressed: () {
                     _registerShop();
-                    signUpUser();
                   },
                   child: Text('Register Shop'),
                   style: ElevatedButton.styleFrom(
@@ -236,7 +215,7 @@ class _ShopregState extends State<Shopreg> {
     );
   }
 
-  void _registerShop() {
+  Future<void> _registerShop() async {
     // Add your logic to register the shop
     String shopName = _shopNameController.text;
     String shopRegNo = _shopRegNoController.text;
@@ -275,10 +254,27 @@ class _ShopregState extends State<Shopreg> {
           'name': ownerName,
           'email': mail,
           'shop_id': shop_id,
-        }).then((value) {
+        }).then((value) async {
           // Success message for adding shop owner data
           // You can navigate to the next screen or perform any other actions here
-          navigatetoproduct();
+          setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passController.text,
+      username: _ownerNameController.text,
+    );
+    if (res == "success") {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) =>  Product(shopId: shop_id)));
+    } else {
+      showSnackbar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+          navigatetoproduct(shop_id);
         }).catchError((error) {
           // Error message for adding shop owner data
           ScaffoldMessenger.of(context).showSnackBar(
