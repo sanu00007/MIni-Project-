@@ -38,7 +38,7 @@ class _SignupState extends State<Signup> {
       _isLoading = true;
     });
     String res = await AuthMethods().signUpUser(
-      username : _usernameController.text,
+      username: _usernameController.text,
       email: _emailController.text,
       password: _passController.text,
     );
@@ -46,7 +46,7 @@ class _SignupState extends State<Signup> {
       FirebaseFirestore.instance.collection('User').add({
         'name': _usernameController.text,
         'email': _emailController.text,
-        'photourl' : "",
+        'photourl': "",
       }).then((value) {
         // Success message for adding shop owner data
         // You can navigate to the next screen or perform any other actions here
@@ -90,17 +90,16 @@ class _SignupState extends State<Signup> {
 
         final userCredential = await _auth.signInWithCredential(cred);
 
-         // Access user information
+        // Access user information
         final User user = userCredential.user!;
-
         final String? username = user.displayName;
         final String? photoUrl = user.photoURL;
         final String? email = user.email;
 
-         FirebaseFirestore.instance.collection('User').add({
-           'username': username,
-           'photoUrl': photoUrl,
-           'email': email,
+        FirebaseFirestore.instance.collection('User').add({
+          'username': username,
+          'photoUrl': photoUrl,
+          'email': email,
         });
 
         // Check if userCredential is not null and navigate to onboard screen
