@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.shopping_basket),
+              leading: Icon(Icons.info_outline_rounded),
               title: Text('About Us'),
               onTap: () {
                 // Navigate to about us screen
