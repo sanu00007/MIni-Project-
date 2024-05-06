@@ -1,3 +1,4 @@
+import 'package:farefinale/dummy.dart';
 import 'package:farefinale/profile.dart';
 import 'package:farefinale/shop.dart';
 import 'package:farefinale/widgets/location.dart';

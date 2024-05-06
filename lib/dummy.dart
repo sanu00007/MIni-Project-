@@ -59,7 +59,7 @@ class _DummyState extends State<Dummy> {
   }
 
   void upimage() {
-    FirebaseFirestore.instance.collection('Food').doc('Noodles').set({
+    FirebaseFirestore.instance.collection('Food').doc('Banana Chips').set({
       'image': imageUrl,
     }).then((value) {
       // Success message

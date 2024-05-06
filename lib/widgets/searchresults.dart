@@ -29,28 +29,34 @@ class _SearchResultsState extends State<SearchResults> {
 
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('Products').get();
+
     await Future.forEach(querySnapshot.docs, (doc) async {
       String name = doc['name'];
       Timestamp expiryDate = doc['expiryDate'];
+
+      // Convert 'price' to double (assuming it's stored as an int in Firestore)
       double price = (doc['price'] as num).toDouble();
+
       String shopId = doc['shop_id'];
       // Fetch shop details based on shopId
       String shopName = await fetchShopDetails(shopId);
       // Fetch image link from Food collection
       String? imageLink = await fetchImageLink(name);
       double? price_pred = await fetchpredprice(name);
+
       // Create a Product object with fetched data
       Product product = Product(
         name: name,
         expiryDate: expiryDate,
         price: price,
-        price_pred: price_pred != null ? price_pred : 38,
+        price_pred: price_pred != null ? price_pred : price,
         shop: shopName,
         image: imageLink != null ? imageLink : "",
         // Add other fields as needed
       );
       productList.add(product);
     });
+
     _products = productList;
   }
 
