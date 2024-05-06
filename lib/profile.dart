@@ -1,3 +1,4 @@
+import 'package:farefinale/aboutus.dart';
 import 'package:farefinale/help.dart';
 import 'package:farefinale/main.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +93,10 @@ class _ProfilePageState extends State<ProfilePage> {
               title: Text('About Us'),
               onTap: () {
                 // Navigate to about us screen
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutUsPage()),
+              ); 
               },
             ),
             ListTile(
