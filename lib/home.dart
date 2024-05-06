@@ -91,14 +91,14 @@ class _MyAppState extends State<MyApp> {
                 itemCount: _imageUrls.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
-                      child: Image.network(
-                        _imageUrls[index],
-                        width: 300, // Adjust the width as needed
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.network(_imageUrls[index],
+                          width: 150,
+                          height: 100,
+                          // Adjust the width as needed
+                          fit: BoxFit.fill),
                     ),
                   );
                 },
@@ -153,14 +153,14 @@ class _MyAppState extends State<MyApp> {
                 itemCount: _imageUrls.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
-                      child: Image.network(
-                        _imageUrls[index],
-                        width: 300, // Adjust the width as needed
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.network(_imageUrls[index],
+                          width: 150,
+                          height: 100,
+                          // Adjust the width as needed
+                          fit: BoxFit.fill),
                     ),
                   );
                 },
@@ -183,14 +183,14 @@ class _MyAppState extends State<MyApp> {
                 itemCount: _imageUrls.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
-                      child: Image.network(
-                        _imageUrls[index],
-                        width: 300, // Adjust the width as needed
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.network(_imageUrls[index],
+                          width: 150,
+                          height: 100,
+                          // Adjust the width as needed
+                          fit: BoxFit.fill),
                     ),
                   );
                 },
