@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:farefinale/home.dart';
@@ -12,6 +13,30 @@ class FoodItemPage extends StatefulWidget {
 }
 
 class _FoodItemPageState extends State<FoodItemPage> {
+  int _currentIndex = 0;
+  final List<String> _imageList = [
+    'assets/shops/shop1.jpeg',
+    'assets/shops/shop2.webp',
+    'assets/shops/shop3.jpg',
+  ];
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 3), (_timer) {
+      setState(() {
+        _currentIndex = (_currentIndex + 1) % _imageList.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,127 +53,27 @@ class _FoodItemPageState extends State<FoodItemPage> {
           ),
         ),
       ),
-      body: Column(
+      body: 
+      Column(
         children: [
+          Text('Savor the Best: Your Favorites, Your Shops!',style: TextStyle(
+          fontSize: 18, 
+          color: Colors.black,
+          fontWeight: FontWeight.bold),),
           SizedBox(
             height: 7,
           ),
-          Container(
-            child: Image.asset("assets/images/bakery.png"),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "     Bread",
-              style: TextStyle(fontSize: 17),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(height: 15),
-              Text(
-                "Filter Options",
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
-              )
-            ],
-          ),
-          SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        return Color.fromARGB(255, 242, 205, 209);
-                      },
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    "View all",
-                    style: TextStyle(color: Colors.black),
-                  ),
+         Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.asset(_imageList[_currentIndex],
+                      width: 1200, fit: BoxFit.fill),
                 ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color.fromARGB(255, 242, 205, 209);
-                        },
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "Shop",
-                      style: TextStyle(color: Colors.black),
-                    )),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color.fromARGB(255, 242, 205, 209);
-                        },
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "Food",
-                      style: TextStyle(color: Colors.black),
-                    )),
-              ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color.fromARGB(255, 242, 205, 209);
-                        },
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "Menu",
-                      style: TextStyle(color: Colors.black),
-                    )),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color.fromARGB(255, 242, 205, 209);
-                        },
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "Alcohol",
-                      style: TextStyle(color: Colors.black),
-                    )),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return Color.fromARGB(255, 242, 205, 209);
-                        },
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "Craft",
-                      style: TextStyle(color: Colors.black),
-                    )),
-              ],
-            ),
-          ),
+         
 
           SizedBox(height: 10), // Adjust the spacing as needed
           Expanded(
