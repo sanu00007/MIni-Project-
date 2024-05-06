@@ -1,10 +1,98 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farefinale/home.dart';
 import 'package:farefinale/profile.dart';
 import 'package:farefinale/shop.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class SearchResults extends StatelessWidget {
+class SearchResults extends StatefulWidget {
   const SearchResults({Key? key}) : super(key: key);
+
+  @override
+  State<SearchResults> createState() => _SearchResultsState();
+}
+
+class _SearchResultsState extends State<SearchResults> {
+  late List<Product> _filteredProducts = [];
+  late List<Product> _products = [];
+  TextEditingController _textEditingController = TextEditingController();
+  bool isSearched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFromProduct();
+  }
+
+  Future<void> fetchFromProduct() async {
+    List<Product> productList = [];
+
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Products').get();
+    await Future.forEach(querySnapshot.docs, (doc) async {
+      String name = doc['name'];
+      Timestamp expiryDate = doc['expiryDate'];
+      double price = doc['price'];
+      String shopId = doc['shop_id'];
+      // Fetch shop details based on shopId
+      String shopName = await fetchShopDetails(shopId);
+      // Fetch image link from Food collection
+      String? imageLink = await fetchImageLink(name);
+      // Create a Product object with fetched data
+      Product product = Product(
+        name: name,
+        expiryDate: expiryDate,
+        price: price,
+        shop: shopName,
+        image: imageLink != null ? imageLink : "",
+        // Add other fields as needed
+      );
+      productList.add(product);
+    });
+    _products = productList;
+  }
+
+  Future<String> fetchShopDetails(String shopId) async {
+    DocumentSnapshot shopSnapshot =
+        await FirebaseFirestore.instance.collection('Shop').doc(shopId).get();
+    return shopSnapshot[
+        'shopName']; // Assuming 'name' is the field containing the shop name
+  }
+
+  Future<String?> fetchImageLink(String productName) async {
+    try {
+      DocumentSnapshot foodSnapshot = await FirebaseFirestore.instance
+          .collection('Food')
+          .doc(productName)
+          .get();
+
+      if (foodSnapshot.exists) {
+        return foodSnapshot['image'];
+      } else {
+        // Handle the case where the document does not exist
+        print('Document for product $productName does not exist');
+        return null;
+      }
+    } catch (error) {
+      // Handle any potential errors that may occur during fetching
+      print('Error fetching image link for product $productName: $error');
+      return null;
+    }
+  }
+
+  void _search(String query) {
+    setState(() {
+      if (query.isNotEmpty) {
+        isSearched = true;
+        _filteredProducts = _products
+            .where((product) =>
+                product.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      } else {
+        isSearched = false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,24 +141,44 @@ class SearchResults extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextField(
+                // controller: _textEditingController,
+                onChanged: _search,
                 decoration: InputDecoration(
                   hintText: 'Search...',
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: IconButton(
+                    onPressed: () {
+                      //   _search(_textEditingController.text);
+                    },
+                    icon: const Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    ),
+                  ),
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20),
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                children: List.generate(
-                  _products.length,
-                  (index) => _buildProductItem(context, _products[index]),
-                ),
-              ),
+              isSearched && _filteredProducts.isEmpty
+                  ? Center(
+                      child: Text('No results found'),
+                    )
+                  : GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      children: List.generate(
+                        isSearched
+                            ? _filteredProducts.length
+                            : _products.length,
+                        (index) => _buildProductItem(
+                            context,
+                            isSearched
+                                ? _filteredProducts[index]
+                                : _products[index]),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -130,7 +238,10 @@ class SearchResults extends StatelessWidget {
   }
 
   Widget _buildProductItem(BuildContext context, Product product) {
+    String formattedDate =
+        DateFormat('dd-MM-yyyy').format(product.expiryDate.toDate());
     return Container(
+      height: 800,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10.0),
@@ -138,27 +249,33 @@ class SearchResults extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            product.image,
-            height: 100,
-            width: double.infinity,
-            fit: BoxFit.cover,
+          Center(
+            child: Image(
+              image: NetworkImage(product.image),
+              width: 100,
+              height: 60,
+              fit: BoxFit.fill,
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Category: ${product.category}',
+                  '${product.name}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Price: ${product.startingPrice}',
+                  'Price: ${product.price}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'Expiry: ${product.isExpired}',
+                  'Expiry: ${formattedDate}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Shop Name: ${product.shop}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -172,65 +289,66 @@ class SearchResults extends StatelessWidget {
 
 class Product {
   final String image;
-  final String category;
-  final String isExpired;
-  final String startingPrice;
+  final String name;
+  final String shop;
+  final Timestamp expiryDate;
+  final double price;
 
-  Product({
-    required this.image,
-    required this.category,
-    required this.isExpired,
-    required this.startingPrice,
-  });
+  Product(
+      {required this.image,
+      required this.name,
+      required this.expiryDate,
+      required this.price,
+      required this.shop});
 }
 
-final List<Product> _products = [
-  Product(
-    image: 'assets/images/bakery.png',
-    category: 'Bakery',
-    isExpired: 'In One day',
-    startingPrice: '\$5.99',
-  ),
-  Product(
-    image: 'assets/images/beverages.png',
-    category: 'Beverages',
-    isExpired: 'In Two days',
-    startingPrice: '\$2.49',
-  ),
-  Product(
-    image: 'assets/images/freshfruits.png',
-    category: 'Fresh Fruits',
-    isExpired: 'In Two days',
-    startingPrice: '\$3.99',
-  ),
-  Product(
-    image: 'assets/images/crisps.png',
-    category: 'Chips',
-    isExpired: 'In Three days',
-    startingPrice: '\$1.99',
-  ),
-  Product(
-    image: 'assets/images/grains.png',
-    category: 'Grains',
-    isExpired: 'In Four days',
-    startingPrice: '\$4.49',
-  ),
-  Product(
-    image: 'assets/images/grocery.png',
-    category: 'Grocery',
-    isExpired: 'In 6 days',
-    startingPrice: '\$2.99',
-  ),
-  Product(
-    image: 'assets/images/oils.png',
-    category: 'Oils',
-    isExpired: 'In 6 days',
-    startingPrice: '\$6.99',
-  ),
-  Product(
-    image: 'assets/images/protein.png',
-    category: 'Protein',
-    isExpired: 'In 7 days',
-    startingPrice: '\$7.99',
-  ),
-];
+// final List<Product> _products = [
+//   Product(
+//     image: 'assets/images/bakery.png',
+//     category: 'Bakery',
+//     isExpired: 'In One day',
+//     startingPrice: '\$5.99',
+//   ),
+//   Product(
+//     image: 'assets/images/beverages.png',
+//     category: 'Beverages',
+//     isExpired: 'In Two days',
+//     startingPrice: '\$2.49',
+//   ),
+//   Product(
+//     image: 'assets/images/freshfruits.png',
+//     category: 'Fresh Fruits',
+//     isExpired: 'In Two days',
+//     startingPrice: '\$3.99',
+//   ),
+//   Product(
+//     image: 'assets/images/crisps.png',
+//     category: 'Chips',
+//     isExpired: 'In Three days',
+//     startingPrice: '\$1.99',
+//   ),
+//   Product(
+//     image: 'assets/images/grains.png',
+//     category: 'Grains',
+//     isExpired: 'In Four days',
+//     startingPrice: '\$4.49',
+//   ),
+//   Product(
+//     image: 'assets/images/grocery.png',
+//     category: 'Grocery',
+//     isExpired: 'In 6 days',
+//     startingPrice: '\$2.99',
+//   ),
+//   Product(
+//     image: 'assets/images/oils.png',
+//     category: 'Oils',
+//     isExpired: 'In 6 days',
+//     startingPrice: '\$6.99',
+//   ),
+//   Product(
+//     image: 'assets/images/protein.png',
+//     category: 'Protein',
+//     isExpired: 'In 7 days',
+//     startingPrice: '\$7.99',
+//   ),
+// ];
