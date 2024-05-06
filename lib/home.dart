@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   List<String> _imageUrls = [];
-
+  List<String> _docNames = [];
   @override
   void initState() {
     super.initState();
@@ -27,14 +27,18 @@ class _MyAppState extends State<MyApp> {
           await FirebaseFirestore.instance.collection('Food').get();
 
       List<String> urls = [];
+      List<String> docNames = [];
       querySnapshot.docs.forEach((doc) {
         String imageUrl = doc[
             'image']; // Assuming 'image' is the field containing the image URL
+        String docId = doc.id;
         urls.add(imageUrl);
+        docNames.add(docId);
       });
 
       setState(() {
         _imageUrls = urls;
+        _docNames = docNames;
       });
     } catch (error) {
       print('Error fetching image URLs: $error');
@@ -92,13 +96,30 @@ class _MyAppState extends State<MyApp> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.network(_imageUrls[index],
-                          width: 150,
-                          height: 100,
-                          // Adjust the width as needed
-                          fit: BoxFit.fill),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.network(
+                            _imageUrls[index],
+                            width: 150,
+                            height: 100,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        SizedBox(height: 8), // Adjust spacing as needed
+                        Center(
+                          child: Text(
+                            '         ' +
+                                _docNames[index], // Display the document name
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -152,15 +173,34 @@ class _MyAppState extends State<MyApp> {
                 scrollDirection: Axis.horizontal,
                 itemCount: _imageUrls.length,
                 itemBuilder: (context, index) {
+                  final reversedIndex = _imageUrls.length - 1 - index;
                   return Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.network(_imageUrls[index],
-                          width: 150,
-                          height: 100,
-                          // Adjust the width as needed
-                          fit: BoxFit.fill),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.network(
+                            _imageUrls[reversedIndex],
+                            width: 150,
+                            height: 100,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        SizedBox(height: 8), // Adjust spacing as needed
+                        Center(
+                          child: Text(
+                            '         ' +
+                                _docNames[
+                                    reversedIndex], // Display the document name
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -184,13 +224,30 @@ class _MyAppState extends State<MyApp> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.network(_imageUrls[index],
-                          width: 150,
-                          height: 100,
-                          // Adjust the width as needed
-                          fit: BoxFit.fill),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.network(
+                            _imageUrls[index],
+                            width: 150,
+                            height: 100,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        SizedBox(height: 8), // Adjust spacing as needed
+                        Center(
+                          child: Text(
+                            '         ' +
+                                _docNames[index], // Display the document name
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
