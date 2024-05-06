@@ -109,15 +109,6 @@ class _SearchResultsState extends State<SearchResults> {
             color: Colors.black,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-              color: Colors.black,
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
