@@ -3,6 +3,7 @@ import 'package:farefinale/home.dart';
 import 'package:farefinale/profile.dart';
 import 'package:farefinale/shop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class SearchResults extends StatefulWidget {
@@ -15,7 +16,6 @@ class SearchResults extends StatefulWidget {
 class _SearchResultsState extends State<SearchResults> {
   late List<Product> _filteredProducts = [];
   late List<Product> _products = [];
-  TextEditingController _textEditingController = TextEditingController();
   bool isSearched = false;
 
   @override
@@ -38,11 +38,13 @@ class _SearchResultsState extends State<SearchResults> {
       String shopName = await fetchShopDetails(shopId);
       // Fetch image link from Food collection
       String? imageLink = await fetchImageLink(name);
+      double? price_pred = await fetchpredprice(name);
       // Create a Product object with fetched data
       Product product = Product(
         name: name,
         expiryDate: expiryDate,
         price: price,
+        price_pred: price_pred != null ? price_pred : 38,
         shop: shopName,
         image: imageLink != null ? imageLink : "",
         // Add other fields as needed
@@ -77,6 +79,27 @@ class _SearchResultsState extends State<SearchResults> {
       // Handle any potential errors that may occur during fetching
       print('Error fetching image link for product $productName: $error');
       return null;
+    }
+  }
+
+  Future<double?> fetchpredprice(String productName) async {
+    try {
+      DocumentSnapshot foodSnapshot = await FirebaseFirestore.instance
+          .collection('predicted_prices')
+          .doc(productName)
+          .get();
+
+      if (foodSnapshot.exists) {
+        return foodSnapshot['predicted_price'];
+      } else {
+        // Handle the case where the document does not exist
+        print('Document for product $productName does not exist');
+        return 0;
+      }
+    } catch (error) {
+      // Handle any potential errors that may occur during fetching
+      print('Error fetching image link for product $productName: $error');
+      return 0;
     }
   }
 
@@ -257,9 +280,25 @@ class _SearchResultsState extends State<SearchResults> {
                   '${product.name}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  'Price: ${product.price}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Text(
+                      'price: ',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '${product.price}',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.lineThrough),
+                    ),
+                    Text('  '),
+                    Text(
+                      '${product.price_pred}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
                 Text(
                   'Expiry: ${formattedDate}',
@@ -284,62 +323,12 @@ class Product {
   final String shop;
   final Timestamp expiryDate;
   final double price;
-
+  final double price_pred;
   Product(
       {required this.image,
       required this.name,
       required this.expiryDate,
       required this.price,
-      required this.shop});
+      required this.shop,
+      required this.price_pred});
 }
-
-// final List<Product> _products = [
-//   Product(
-//     image: 'assets/images/bakery.png',
-//     category: 'Bakery',
-//     isExpired: 'In One day',
-//     startingPrice: '\$5.99',
-//   ),
-//   Product(
-//     image: 'assets/images/beverages.png',
-//     category: 'Beverages',
-//     isExpired: 'In Two days',
-//     startingPrice: '\$2.49',
-//   ),
-//   Product(
-//     image: 'assets/images/freshfruits.png',
-//     category: 'Fresh Fruits',
-//     isExpired: 'In Two days',
-//     startingPrice: '\$3.99',
-//   ),
-//   Product(
-//     image: 'assets/images/crisps.png',
-//     category: 'Chips',
-//     isExpired: 'In Three days',
-//     startingPrice: '\$1.99',
-//   ),
-//   Product(
-//     image: 'assets/images/grains.png',
-//     category: 'Grains',
-//     isExpired: 'In Four days',
-//     startingPrice: '\$4.49',
-//   ),
-//   Product(
-//     image: 'assets/images/grocery.png',
-//     category: 'Grocery',
-//     isExpired: 'In 6 days',
-//     startingPrice: '\$2.99',
-//   ),
-//   Product(
-//     image: 'assets/images/oils.png',
-//     category: 'Oils',
-//     isExpired: 'In 6 days',
-//     startingPrice: '\$6.99',
-//   ),
-//   Product(
-//     image: 'assets/images/protein.png',
-//     category: 'Protein',
-//     isExpired: 'In 7 days',
-//     startingPrice: '\$7.99',
-//   ),
-// ];
