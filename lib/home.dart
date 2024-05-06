@@ -1,3 +1,4 @@
+import 'package:farefinale/dummy.dart';
 import 'package:farefinale/profile.dart';
 import 'package:farefinale/shop.dart';
 import 'package:farefinale/widgets/searchresults.dart';
@@ -58,7 +59,8 @@ class _MyAppState extends State<MyApp> {
         actions: [
           IconButton(
             onPressed: () {
-              // Handle favorite button tap
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => const Dummy()));
             },
             icon: Icon(
               Icons.favorite,
