@@ -1,3 +1,4 @@
+import 'package:farefinale/help.dart';
 import 'package:farefinale/main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -100,13 +101,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 // Navigate to settings screen
               },
             ),
-            ListTile(
-              leading: Icon(Icons.help),
-              title: Text('Help Me'),
-              onTap: () {
-                // Navigate to help screen
-              },
-            ),
+           ListTile(
+            leading: Icon(Icons.help),
+            title: Text('Help'),
+            onTap: () {
+              // Navigate to help screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HelpPage()),
+              ); },
+          ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Log out'),
