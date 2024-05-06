@@ -32,7 +32,7 @@ class _SearchResultsState extends State<SearchResults> {
     await Future.forEach(querySnapshot.docs, (doc) async {
       String name = doc['name'];
       Timestamp expiryDate = doc['expiryDate'];
-      double price = doc['price'];
+      double price = (doc['price'] as num).toDouble();
       String shopId = doc['shop_id'];
       // Fetch shop details based on shopId
       String shopName = await fetchShopDetails(shopId);
