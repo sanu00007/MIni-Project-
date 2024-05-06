@@ -1,6 +1,7 @@
 import 'package:farefinale/dummy.dart';
 import 'package:farefinale/profile.dart';
 import 'package:farefinale/shop.dart';
+import 'package:farefinale/widgets/location.dart';
 import 'package:farefinale/widgets/searchresults.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,10 +61,10 @@ class _MyAppState extends State<MyApp> {
           IconButton(
             onPressed: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => const Dummy()));
+                  .push(MaterialPageRoute(builder: (context) => const Myloc()));
             },
             icon: Icon(
-              Icons.favorite,
+              Icons.location_on_outlined,
               size: 30,
               color: Color.fromARGB(246, 201, 21, 41),
             ),

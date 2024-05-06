@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-class MyMap extends StatelessWidget {
-  const MyMap({super.key});
+class Myloc extends StatelessWidget {
+  const Myloc({super.key});
 
   @override
   Widget build(BuildContext context) {

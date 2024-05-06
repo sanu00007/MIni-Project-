@@ -41,7 +41,8 @@ class _ProductPageState extends State<Product> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Product'),
-        backgroundColor: Colors.red,
+        backgroundColor: Color.fromARGB(246, 201, 21, 41),
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
@@ -167,12 +168,13 @@ class _ProductPageState extends State<Product> {
               },
               child: Text('Add Product'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                backgroundColor: Color.fromARGB(246, 201, 21, 41),
                 textStyle: TextStyle(fontSize: 18),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
               ),
             ),
-            SizedBox(height: 32),
+            SizedBox(height: 26),
             TextButton(
               onPressed: () async {
                 await AuthMethods().signOut();
@@ -184,7 +186,9 @@ class _ProductPageState extends State<Product> {
               },
               child: Text(
                 'Finish Adding Products',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(
+                  color: Color.fromARGB(246, 201, 21, 41),
+                ),
               ),
             ),
           ],
@@ -200,7 +204,6 @@ class _ProductPageState extends State<Product> {
     if (productName.isNotEmpty &&
         _selectedProductType.isNotEmpty &&
         _selectedExpiryDate != null) {
-
       // Add data to Firestore
       FirebaseFirestore.instance.collection('Products').add({
         'name': productName,
@@ -208,7 +211,7 @@ class _ProductPageState extends State<Product> {
         'expiryDate': _selectedExpiryDate!,
         'price': price,
         'isFeatured': _isFeatured,
-        'shop_id' : shopId,
+        'shop_id': shopId,
         // Add user UID to the product data
       }).then((value) {
         ScaffoldMessenger.of(context).showSnackBar(

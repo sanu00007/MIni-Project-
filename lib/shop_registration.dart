@@ -36,17 +36,18 @@ class _ShopregState extends State<Shopreg> {
   }
 
   void navigatetoproduct(String shop_id) {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) =>  Product(shopId: shop_id)));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => Product(shopId: shop_id)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         title: Text('Shop Registration'),
-        backgroundColor: Colors.red,
+        backgroundColor: Color.fromARGB(246, 201, 21, 41),
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -200,11 +201,14 @@ class _ShopregState extends State<Shopreg> {
                   onPressed: () {
                     _registerShop();
                   },
-                  child: Text('Register Shop'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color.fromARGB(246, 201, 21, 41),
                     textStyle: TextStyle(fontSize: 18),
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  ),
+                  child: Text(
+                    'Register Shop',
                   ),
                 ),
               ),
@@ -258,22 +262,22 @@ class _ShopregState extends State<Shopreg> {
           // Success message for adding shop owner data
           // You can navigate to the next screen or perform any other actions here
           setState(() {
-      _isLoading = true;
-    });
-    String res = await AuthMethods().signUpUser(
-      email: _emailController.text,
-      password: _passController.text,
-      username: _ownerNameController.text,
-    );
-    if (res == "success") {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) =>  Product(shopId: shop_id)));
-    } else {
-      showSnackbar(res, context);
-    }
-    setState(() {
-      _isLoading = false;
-    });
+            _isLoading = true;
+          });
+          String res = await AuthMethods().signUpUser(
+            email: _emailController.text,
+            password: _passController.text,
+            username: _ownerNameController.text,
+          );
+          if (res == "success") {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => Product(shopId: shop_id)));
+          } else {
+            showSnackbar(res, context);
+          }
+          setState(() {
+            _isLoading = false;
+          });
           navigatetoproduct(shop_id);
         }).catchError((error) {
           // Error message for adding shop owner data

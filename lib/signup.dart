@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farefinale/home.dart';
 import 'package:farefinale/main.dart';
 import 'package:farefinale/onboard.dart';
 import 'package:farefinale/resources/auth_methods.dart';
@@ -46,7 +47,7 @@ class _SignupState extends State<Signup> {
       FirebaseFirestore.instance.collection('User').add({
         'username': _usernameController.text,
         'email': _emailController.text,
-        'photoUrl' : "",
+        'photoUrl': "",
       }).then((value) {
         // Success message for adding shop owner data
         // You can navigate to the next screen or perform any other actions here
@@ -58,7 +59,7 @@ class _SignupState extends State<Signup> {
       });
 
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Onboard()));
+          MaterialPageRoute(builder: (context) => const MyApp()));
     } else {
       showSnackbar(res, context);
     }
@@ -109,7 +110,7 @@ class _SignupState extends State<Signup> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  Onboard(), // Replace 'Onboard' with your onboard screen
+                  MyApp(), // Replace 'Onboard' with your onboard screen
             ),
           );
 
