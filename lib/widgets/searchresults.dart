@@ -42,7 +42,7 @@ class _SearchResultsState extends State<SearchResults> {
       String shopName = await fetchShopDetails(shopId);
       // Fetch image link from Food collection
       String? imageLink = await fetchImageLink(name);
-      double? price_pred = await fetchpredprice(name);
+      num? price_pred = await fetchpredprice(name);
 
       // Create a Product object with fetched data
       Product product = Product(
@@ -88,7 +88,7 @@ class _SearchResultsState extends State<SearchResults> {
     }
   }
 
-  Future<double?> fetchpredprice(String productName) async {
+  Future<num?> fetchpredprice(String productName) async {
     try {
       DocumentSnapshot foodSnapshot = await FirebaseFirestore.instance
           .collection('predicted_prices')
@@ -329,7 +329,7 @@ class Product {
   final String shop;
   final Timestamp expiryDate;
   final double price;
-  final double price_pred;
+  final num price_pred;
   Product(
       {required this.image,
       required this.name,
