@@ -13,38 +13,38 @@ class HelpPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: 20.0),
-            Text(
-              'Ordering Process',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_right),
-              title: Text('How to place an order'),
-              onTap: () {
-                // Add navigation logic or display information
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_right),
-              title: Text('Selecting items from the menu'),
-              onTap: () {
-                // Add navigation logic or display information
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_right),
-              title: Text('Adding items to the cart'),
-              onTap: () {
-                // Add navigation logic or display information
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_right),
-              title: Text('Payment options available'),
-              onTap: () {
-                // Add navigation logic or display information
-              },
-            ),
+            // Text(
+            //   'Ordering Process',
+            //   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.arrow_right),
+            //   title: Text('How to place an order'),
+            //   onTap: () {
+            //     // Add navigation logic or display information
+            //   },
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.arrow_right),
+            //   title: Text('Selecting items from the menu'),
+            //   onTap: () {
+            //     // Add navigation logic or display information
+            //   },
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.arrow_right),
+            //   title: Text('Adding items to the cart'),
+            //   onTap: () {
+            //     // Add navigation logic or display information
+            //   },
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.arrow_right),
+            //   title: Text('Payment options available'),
+            //   onTap: () {
+            //     // Add navigation logic or display information
+            //   },
+            // ),
             SizedBox(height: 20.0),
             Text(
               'Account Management',
@@ -144,7 +144,8 @@ class HelpPage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.arrow_right),
-              title: Text('Disclaimer regarding product availability, pricing, and accuracy of information'),
+              title: Text(
+                  'Disclaimer regarding product availability, pricing, and accuracy of information'),
               onTap: () {
                 // Add navigation logic or display information
               },
