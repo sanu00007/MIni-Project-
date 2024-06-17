@@ -75,7 +75,8 @@ class _FoodItemPageState extends State<FoodItemPage> {
             ),
          
 
-          SizedBox(height: 10), // Adjust the spacing as needed
+          SizedBox(height: 10),
+           // Adjust the spacing as needed 
           Expanded(
             child: FutureBuilder<QuerySnapshot>(
               future: FirebaseFirestore.instance.collection('Shop').get(),
