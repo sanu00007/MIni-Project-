@@ -1,7 +1,7 @@
 import 'package:farefinale/main.dart';
+import 'package:farefinale/productlist.dart';
 import 'package:farefinale/resources/auth_methods.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductModel {
@@ -9,6 +9,7 @@ class ProductModel {
   String type;
   DateTime expiryDate;
   double price;
+  int count;
   bool isFeatured;
 
   ProductModel({
@@ -17,6 +18,7 @@ class ProductModel {
     required this.expiryDate,
     required this.price,
     required this.isFeatured,
+    required this.count,
   });
 }
 
@@ -33,6 +35,7 @@ class _ProductPageState extends State<Product> {
   String _selectedProductType = '';
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _countcontroller = TextEditingController();
   DateTime? _selectedExpiryDate;
   bool _isFeatured = false;
 
@@ -145,6 +148,20 @@ class _ProductPageState extends State<Product> {
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 16),
+            Text(
+              'Stocks Available',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            TextFormField(
+              controller: _countcontroller,
+              onChanged: (value) {},
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter number of packets available',
+              ),
+              keyboardType: TextInputType.number,
+            ),
             Row(
               children: [
                 Checkbox(
@@ -175,21 +192,44 @@ class _ProductPageState extends State<Product> {
               ),
             ),
             SizedBox(height: 26),
-            TextButton(
-              onPressed: () async {
-                await AuthMethods().signOut();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Login()),
-                  (route) => false,
-                );
-              },
-              child: Text(
-                'Finish Adding Products',
-                style: TextStyle(
-                  color: Color.fromARGB(246, 201, 21, 41),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    await AuthMethods().signOut();
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                      (route) => false,
+                    );
+                  },
+                  child: Text(
+                    'Finish Adding Products',
+                    style: TextStyle(
+                      color: Color.fromARGB(246, 201, 21, 41),
+                    ),
+                  ),
                 ),
-              ),
+                
+               TextButton(
+                   onPressed: () {
+                    Navigator.push(
+                    context,
+                     MaterialPageRoute(
+                     builder: (context) => ProductList(shopId: widget.shopId),
+                      ),
+                    );
+                   },
+             child: Text(
+             'View Product List',
+             style: TextStyle(
+               color: Color.fromARGB(246, 201, 21, 41),
+          ),
+          ),
+         ),
+
+
+              ],
             ),
           ],
         ),
@@ -199,6 +239,7 @@ class _ProductPageState extends State<Product> {
 
   void _addProduct(String shopId) {
     String productName = _productNameController.text;
+    int count = int.parse(_countcontroller.text);
     double price = double.parse(_priceController.text);
     // Check if all required fields are filled
     if (productName.isNotEmpty &&
@@ -212,6 +253,7 @@ class _ProductPageState extends State<Product> {
         'price': price,
         'isFeatured': _isFeatured,
         'shop_id': shopId,
+        'count': count,
         // Add user UID to the product data
       }).then((value) {
         ScaffoldMessenger.of(context).showSnackBar(
