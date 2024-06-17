@@ -16,12 +16,38 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   List<String> _imageUrls = [];
   List<String> _docNames = [];
+  List<num> _pred_prices = [];
   @override
   void initState() {
     super.initState();
     _loadImageUrls();
   }
 
+  Future<void> _loadPrice(String docId) async {
+    try {
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('predicted_prices')
+          .doc(docId)
+          .get();
+
+      if (docSnapshot.exists) {
+        num predictedPrice = docSnapshot['predicted_price'] ?? 0;
+        _pred_prices.add(predictedPrice);
+        setState(() {
+          _pred_prices = _pred_prices; // Update state with new prices
+        });
+      } else {
+        // Document doesn't exist for this ID
+        setState(() {
+          _pred_prices.add(0); // Use default value or handle differently
+        });
+      }
+    } catch (error) {
+      print('Error fetching predicted price: $error');
+    }
+  }
+
+// Inside _loadImageUrls method, await _loadPrice
   Future<void> _loadImageUrls() async {
     try {
       QuerySnapshot querySnapshot =
@@ -30,9 +56,9 @@ class _MyAppState extends State<MyApp> {
       List<String> urls = [];
       List<String> docNames = [];
       querySnapshot.docs.forEach((doc) {
-        String imageUrl = doc[
-            'image']; // Assuming 'image' is the field containing the image URL
+        String imageUrl = doc['image'];
         String docId = doc.id;
+        _loadPrice(docId); // Load price for this document ID
         urls.add(imageUrl);
         docNames.add(docId);
       });
@@ -120,6 +146,33 @@ class _MyAppState extends State<MyApp> {
                             ),
                           ),
                         ),
+                        // Row(
+                        //   children: [
+                        //     Center(
+                        //         child: Text(
+                        //       '          Price:',
+                        //       style: TextStyle(fontWeight: FontWeight.bold),
+                        //     )),
+                        //     Center(
+                        //       child: Text(
+                        //         _pred_prices.isNotEmpty &&
+                        //                 index >= 0 &&
+                        //                 index < _pred_prices.length
+                        //             ? _pred_prices[index].toString()
+                        //             : 'N/A',
+                        //         style: TextStyle(
+                        //           fontSize: 16,
+                        //           fontWeight: FontWeight.bold,
+                        //           color: _pred_prices.isNotEmpty &&
+                        //                   (index < 0 ||
+                        //                       index >= _pred_prices.length)
+                        //               ? Colors.red // Error state indication
+                        //               : Colors.black,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   );
